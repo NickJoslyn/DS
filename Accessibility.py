@@ -6,7 +6,7 @@
 ## Institution: Simpson College
 ##
 ## Purpose: Identify average distances between demand nodes and facility nodes
-##
+##  Solves for state fluidity metric.
 ##---------------------------------------------------------------------
 
 ##=====================================================================
@@ -17,13 +17,13 @@ import pandas as pd
 start = time.time()
 
 #Read-in Files
-demandNumbersExcel = 'Demands/Demand.txt'
-demandFileExcel = 'Demands/DemandString.csv'
-supplyNumbersExcel = 'Facilities/AHA_Numbers_Class_Text.txt'
-distanceMatrixExcel = 'DistanceMatrix/2017Time.txt'
+demandNumbersExcel = '../../Demands/Demand.txt'
+demandFileExcel = '../../Demands/DemandString.csv'
+supplyNumbersExcel = '../../Facilities/AHA_Numbers_Class_Text.txt'
+distanceMatrixExcel = '../../DistanceMatrix/2017Time.txt'
 
 DemandNumbers = np.genfromtxt(demandNumbersExcel)
-DemandInfo = pd.read_csv(demandFileExcel)
+DemandInfo = pd.read_csv(demandFileExcel, header = None)
 SupplyNumbers = np.genfromtxt(supplyNumbersExcel)
 DistanceMatrix = np.genfromtxt(distanceMatrixExcel)
 
@@ -62,13 +62,14 @@ Windexes = []
 for i, row in DemandInfo.iterrows():
     if (row[1] in northeastRegion):
         NEindexes.append(i)
-    if (row[1] in midwestRegion):
+    elif (row[1] in midwestRegion):
         MWindexes.append(i)
-    if (row[1] in southRegion):
+    elif (row[1] in southRegion):
         Sindexes.append(i)
-    if (row[1] in westRegion):
+    elif (row[1] in westRegion):
         Windexes.append(i)
-
+    else:
+        print("No region for " + str(row))
 #---------------------------------------------
 # Convert raw populations in millions to DS estimates (not millions)
 
@@ -120,22 +121,185 @@ for national in demandDistances:
 
 #---------------------------------------------
 # Print Regional Level Stats
+# Northeast:
+northeast1 = [0,0]
+northeast2 = [0,0]
+northeast3 = [0,0]
+northeast4 = [0,0]
+northeast5 = [0,0]
 
+for index in NEindexes:
+    if (demandDistances[index] <= 0.5):
+        northeast1[0] = northeast1[0] + 1
+        northeast1[1] = northeast1[1] + DemandNumbers[index, 1]
+    if (0.5 < demandDistances[index] <= 1.0):
+        northeast2[0] = northeast2[0] + 1
+        northeast2[1] = northeast2[1] + DemandNumbers[index, 1]
+    if (1.0 <= demandDistances[index] <= 1.5):
+        northeast3[0] = northeast3[0] + 1
+        northeast3[1] = northeast3[1] + DemandNumbers[index, 1]
+    if (1.5 < demandDistances[index] <= 2.0):
+        northeast4[0] = northeast4[0] + 1
+        northeast4[1] = northeast4[1] + DemandNumbers[index, 1]
+    if (demandDistances[index] > 2.0):
+        northeast5[0] = northeast5[0] + 1
+        northeast5[1] = northeast5[1] + DemandNumbers[index, 1]
 
+# Midwest:
+midwest1 = [0,0]
+midwest2 = [0,0]
+midwest3 = [0,0]
+midwest4 = [0,0]
+midwest5 = [0,0]
 
+for index in MWindexes:
+    if (demandDistances[index] <= 0.5):
+        midwest1[0] = midwest1[0] + 1
+        midwest1[1] = midwest1[1] + DemandNumbers[index, 1]
+    if (0.5 < demandDistances[index] <= 1.0):
+        midwest2[0] = midwest2[0] + 1
+        midwest2[1] = midwest2[1] + DemandNumbers[index, 1]
+    if (1.0 <= demandDistances[index] <= 1.5):
+        midwest3[0] = midwest3[0] + 1
+        midwest3[1] = midwest3[1] + DemandNumbers[index, 1]
+    if (1.5 < demandDistances[index] <= 2.0):
+        midwest4[0] = midwest4[0] + 1
+        midwest4[1] = midwest4[1] + DemandNumbers[index, 1]
+    if (demandDistances[index] > 2.0):
+        midwest5[0] = midwest5[0] + 1
+        midwest5[1] = midwest5[1] + DemandNumbers[index, 1]
+
+# South:
+south1 = [0,0]
+south2 = [0,0]
+south3 = [0,0]
+south4 = [0,0]
+south5 = [0,0]
+
+for index in Sindexes:
+    if (demandDistances[index] <= 0.5):
+        south1[0] = south1[0] + 1
+        south1[1] = south1[1] + DemandNumbers[index, 1]
+    if (0.5 < demandDistances[index] <= 1.0):
+        south2[0] = south2[0] + 1
+        south2[1] = south2[1] + DemandNumbers[index, 1]
+    if (1.0 <= demandDistances[index] <= 1.5):
+        south3[0] = south3[0] + 1
+        south3[1] = south3[1] + DemandNumbers[index, 1]
+    if (1.5 < demandDistances[index] <= 2.0):
+        south4[0] = south4[0] + 1
+        south4[1] = south4[1] + DemandNumbers[index, 1]
+    if (demandDistances[index] > 2.0):
+        south5[0] = south5[0] + 1
+        south5[1] = south5[1] + DemandNumbers[index, 1]
+
+# West:
+west1 = [0,0]
+west2 = [0,0]
+west3 = [0,0]
+west4 = [0,0]
+west5 = [0,0]
+
+for index in Windexes:
+    if (demandDistances[index] <= 0.5):
+        west1[0] = west1[0] + 1
+        west1[1] = west1[1] + DemandNumbers[index, 1]
+    if (0.5 < demandDistances[index] <= 1.0):
+        west2[0] = west2[0] + 1
+        west2[1] = west2[1] + DemandNumbers[index, 1]
+    if (1.0 <= demandDistances[index] <= 1.5):
+        west3[0] = west3[0] + 1
+        west3[1] = west3[1] + DemandNumbers[index, 1]
+    if (1.5 < demandDistances[index] <= 2.0):
+        west4[0] = west4[0] + 1
+        west4[1] = west4[1] + DemandNumbers[index, 1]
+    if (demandDistances[index] > 2.0):
+        west5[0] = west5[0] + 1
+        west5[1] = west5[1] + DemandNumbers[index, 1]
 
 #---------------------------------------------
+# Identify number of people in each region
+
+# National
+totalPeople = 0
+for i in range(numberOfDemandNodes):
+    totalPeople = totalPeople + DemandNumbers[i,1]
+
+# Northeast
+NEpeople = 0
+for index in NEindexes:
+    NEpeople = NEpeople + DemandNumbers[index,1]
+
+# Midwest
+MWpeople = 0
+for index in MWindexes:
+    MWpeople = MWpeople + DemandNumbers[index,1]
+
+# South
+Speople = 0
+for index in Sindexes:
+    Speople = Speople + DemandNumbers[index,1]
+
+# West
+Wpeople = 0
+for index in Windexes:
+    Wpeople = Wpeople + DemandNumbers[index,1]
+
+#---------------------------------------------
+# Print results
 
 end = time.time()
+
+print("Number of Cities: " + str(numberOfDemandNodes))
+print("Total People: " + str(totalPeople))
+print("National Stats:")
 print(national1)
 print(national2)
 print(national3)
 print(national4)
 print(national5)
-#print(demandDistances)
-total = 0
-for i in range(numberOfDemandNodes):
-    total = total + DemandNumbers[i,1]
-print(total)
+print()
+
+print("Number of Cities in NE: " + str(len(NEindexes)))
+print("Number of People in NE: " + str(NEpeople))
+print("Northeast Stats:")
+print(northeast1)
+print(northeast2)
+print(northeast3)
+print(northeast4)
+print(northeast5)
+print()
+
+print("Number of Cities in MW: " + str(len(MWindexes)))
+print("Number of People in MW: " + str(MWpeople))
+print("Midwest Stats:")
+print(midwest1)
+print(midwest2)
+print(midwest3)
+print(midwest4)
+print(midwest5)
+print()
+
+print("Number of Cities in South: " + str(len(Sindexes)))
+print("Number of People in South: " + str(Speople))
+print("South Stats:")
+print(south1)
+print(south2)
+print(south3)
+print(south4)
+print(south5)
+print()
+
+print("Number of Cities in West: " + str(len(Windexes)))
+print("Number of People in West: " + str(Wpeople))
+print("West Stats:")
+print(west1)
+print(west2)
+print(west3)
+print(west4)
+print(west5)
+print()
+
+
 #print(optimalLocations)
 print("Wall Time: " + str(round(end-start, 2)) + " seconds")
